@@ -6,8 +6,6 @@ use JSON;
 our $VERSION = '0.001';
 $VERSION = eval $VERSION;
 
-my @api_methods;
-
 has api_version => (
   is => 'ro',
   isa => 'Num',
@@ -57,10 +55,6 @@ has timeout => (
   default => 5,
 );
 
-for my $method (@api_methods) {
-  __PACKAGE__->meta->add_method( $method => sub { shift->_request($method, @_) } );
-}
-
 sub _build_lwp {
   my $self = shift;
   my $ua = LWP::UserAgent->new( timeout => $self->timeout, agent => __PACKAGE__ . ' ' . $VERSION );
@@ -86,101 +80,105 @@ sub _request {
   return $response->is_success ? from_json($response->content) : $response->status_line;
 }
 
-@api_methods = qw(
-campaignContent
-campaignCreate
-campaignDelete
-campaignEcommOrderAdd
-campaignPause
-campaignReplicate
-campaignResume
-campaignSchedule
-campaignSegmentTest
-campaignSendNow
-campaignSendTest
-campaignShareReport
-campaignTemplateContent
-campaignUnschedule
-campaignUpdate
-campaigns
-campaignAbuseReports
-campaignAdvice
-campaignAnalytics
-campaignBounceMessage
-campaignBounceMessages
-campaignClickStats
-campaignEcommOrders
-campaignEepUrlStats
-campaignEmailDomainPerformance
-campaignGeoOpens
-campaignGeoOpensForCountry
-campaignHardBounces
-campaignMembers
-campaignSoftBounces
-campaignStats
-campaignUnsubscribes
-campaignClickDetailAIM
-campaignEmailStatsAIM
-campaignEmailStatsAIMAll
-campaignNotOpenedAIM
-campaignOpenedAIM
-ecommOrderAdd
-ecommOrderDel
-ecommOrders
-folderAdd
-folderDel
-folderUpdate
-folders
-campaignsForEmail
-chimpChatter
-generateText
-getAccountDetails
-inlineCss
-listsForEmail
-ping
-listAbuseReports
-listActivity
-listBatchSubscribe
-listBatchUnsubscribe
-listClients
-listGrowthHistory
-listInterestGroupAdd
-listInterestGroupDel
-listInterestGroupUpdate
-listInterestGroupingAdd
-listInterestGroupingDel
-listInterestGroupingUpdate
-listInterestGroupings
-listLocations
-listMemberActivity
-listMemberInfo
-listMembers
-listMergeVarAdd
-listMergeVarDel
-listMergeVarUpdate
-listMergeVars
-listStaticSegmentAdd
-listStaticSegmentDel
-listStaticSegmentMembersAdd
-listStaticSegmentMembersDel
-listStaticSegmentReset
-listStaticSegments
-listSubscribe
-listUnsubscribe
-listUpdateMember
-listWebhookAdd
-listWebhookDel
-listWebhooks
-lists
-apikeyAdd
-apikeyExpire
-apikeys
-templateAdd
-templateDel
-templateInfo
-templateUndel
-templateUpdate
-templates
+my @api_methods = qw(
+  campaignContent
+  campaignCreate
+  campaignDelete
+  campaignEcommOrderAdd
+  campaignPause
+  campaignReplicate
+  campaignResume
+  campaignSchedule
+  campaignSegmentTest
+  campaignSendNow
+  campaignSendTest
+  campaignShareReport
+  campaignTemplateContent
+  campaignUnschedule
+  campaignUpdate
+  campaigns
+  campaignAbuseReports
+  campaignAdvice
+  campaignAnalytics
+  campaignBounceMessage
+  campaignBounceMessages
+  campaignClickStats
+  campaignEcommOrders
+  campaignEepUrlStats
+  campaignEmailDomainPerformance
+  campaignGeoOpens
+  campaignGeoOpensForCountry
+  campaignHardBounces
+  campaignMembers
+  campaignSoftBounces
+  campaignStats
+  campaignUnsubscribes
+  campaignClickDetailAIM
+  campaignEmailStatsAIM
+  campaignEmailStatsAIMAll
+  campaignNotOpenedAIM
+  campaignOpenedAIM
+  ecommOrderAdd
+  ecommOrderDel
+  ecommOrders
+  folderAdd
+  folderDel
+  folderUpdate
+  folders
+  campaignsForEmail
+  chimpChatter
+  generateText
+  getAccountDetails
+  inlineCss
+  listsForEmail
+  ping
+  listAbuseReports
+  listActivity
+  listBatchSubscribe
+  listBatchUnsubscribe
+  listClients
+  listGrowthHistory
+  listInterestGroupAdd
+  listInterestGroupDel
+  listInterestGroupUpdate
+  listInterestGroupingAdd
+  listInterestGroupingDel
+  listInterestGroupingUpdate
+  listInterestGroupings
+  listLocations
+  listMemberActivity
+  listMemberInfo
+  listMembers
+  listMergeVarAdd
+  listMergeVarDel
+  listMergeVarUpdate
+  listMergeVars
+  listStaticSegmentAdd
+  listStaticSegmentDel
+  listStaticSegmentMembersAdd
+  listStaticSegmentMembersDel
+  listStaticSegmentReset
+  listStaticSegments
+  listSubscribe
+  listUnsubscribe
+  listUpdateMember
+  listWebhookAdd
+  listWebhookDel
+  listWebhooks
+  lists
+  apikeyAdd
+  apikeyExpire
+  apikeys
+  templateAdd
+  templateDel
+  templateInfo
+  templateUndel
+  templateUpdate
+  templates
 );
+
+for my $method (@api_methods) {
+  __PACKAGE__->meta->add_method( $method => sub { shift->_request($method, @_) } );
+}
 
 1;
