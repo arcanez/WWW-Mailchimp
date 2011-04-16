@@ -50,13 +50,20 @@ has ua => (
   handles => [ qw(request) ],
 );
 
+has timeout => (
+  is => 'rw',
+  isa => 'Int',
+  lazy => 1,
+  default => 5,
+);
+
 for my $method (@api_methods) {
   __PACKAGE__->meta->add_method( $method => sub { shift->_request($method, @_) } );
 }
 
 sub _build_lwp {
   my $self = shift;
-  my $ua = LWP::UserAgent->new( agent => __PACKAGE__ . ' ' . $VERSION );
+  my $ua = LWP::UserAgent->new( timeout => $self->timeout, agent => __PACKAGE__ . ' ' . $VERSION );
 }
 
 sub _request {
