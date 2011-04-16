@@ -50,11 +50,8 @@ has ua => (
   handles => [ qw(request) ],
 );
 
-sub BUILD {
-  my $self = shift;
-  for my $method (@api_methods) {
-    $self->meta->add_method( $method => sub { shift->_request($method, @_) } );
-  }
+for my $method (@api_methods) {
+  __PACKAGE__->meta->add_method( $method => sub { shift->_request($method, @_) } );
 }
 
 sub _build_lwp {
