@@ -62,15 +62,32 @@ sub _build_lwp {
   my $ua = LWP::UserAgent->new( timeout => $self->timeout, agent => __PACKAGE__ . ' ' . $VERSION );
 }
 
+sub _build_query_args {
+  my ($self, %args) = @_;
+  my %merge_vars = @{delete $args{merge_vars}};
+  for my $var (keys %merge_vars) {
+    if (ref($merge_vars{$var}) eq 'ARRAY') {
+      my $count = 0; 
+      for my $val (@{$merge_vars{$var}}) {
+        $args{"merge_vars[$var][$count]"} = $val;
+        $count++;
+      }
+    } else {
+      $args{"merge_vars[$var]"} = $merge_vars{$var};
+    }
+  }
+  
+  my $uri = URI->new( $self->api_url );
+  $uri->query_form_hash( apikey => $self->apikey, output => $self->output_format, %args );
+  return $uri;
+}
+
 sub _request {
   my $self = shift;
   my $method = shift;
   my %args = ref($_[0]) ? %{$_[0]} : @_;
-  my $merge_vars = delete $args{merge_vars};
-  $args{"merge_vars[$_]"} = $merge_vars->{$_} for keys %$merge_vars;
 
-  my $uri = URI->new( $self->api_url );
-  $uri->query_form_hash( apikey => $self->apikey, output => $self->output_format, method => $method, %args );
+  my $uri = $self->_build_query_args(method => $method, %args);
 
   my $response = $self->request( HTTP::Request->new( GET => $uri->canonical ) );
   return $response->is_success ? from_json($response->content) : $response->status_line;
