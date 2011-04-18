@@ -66,12 +66,13 @@ sub _request {
   my $self = shift;
   my $method = shift;
   my %args = ref($_[0]) ? %{$_[0]} : @_;
-  my $uri = URI->new( $self->api_url );
+  my $merge_vars = delete $args{merge_vars};
+  $args{"merge_vars[$_]"} = $merge_vars->{$_} for keys %$merge_vars;
 
+  my $uri = URI->new( $self->api_url );
   $uri->query_form_hash( apikey => $self->apikey, output => $self->output_format, method => $method, %args );
 
   my $response = $self->request( HTTP::Request->new( GET => $uri->canonical ) );
-
   return $response->is_success ? from_json($response->content) : $response->status_line;
 }
 
