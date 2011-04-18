@@ -10,6 +10,8 @@ WriteMakefile(
     'JSON' => '0',
     'LWP' => '0',
     'Moose' => '0.93',
+    'URI' => '0',
+    'URI::QueryParam' => '0',
   },
 );
 

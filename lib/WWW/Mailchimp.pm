@@ -2,6 +2,8 @@ package WWW::Mailchimp;
 use Moose;
 use LWP;
 use JSON;
+use URI;
+use URI::QueryParam;
 
 our $VERSION = '0.001';
 $VERSION = eval $VERSION;
@@ -64,18 +66,11 @@ sub _request {
   my $self = shift;
   my $method = shift;
   my %args = ref($_[0]) ? %{$_[0]} : @_;
-  my $url;
-  $url  = $self->api_url;
-  $url .= '?apikey=' . $self->apikey;
-  $url .= '&output=' . $self->output_format;
-  $url .= '&method=' . $method;
+  my $uri = URI->new( $self->api_url );
 
-  if (scalar keys %args) {
-    $url .= '&' . (join '&', map { "$_=$args{$_}" } keys %args);
-  }
+  $uri->query_form_hash( apikey => $self->apikey, output => $self->output_format, method => $method, %args );
 
-  my $request = HTTP::Request->new( GET => $url );
-  my $response = $self->request($request);
+  my $response = $self->request( HTTP::Request->new( GET => $uri->canonical ) );
 
   return $response->is_success ? from_json($response->content) : $response->status_line;
 }
