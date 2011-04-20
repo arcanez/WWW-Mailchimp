@@ -5,7 +5,7 @@ use JSON;
 use URI;
 use URI::QueryParam;
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 $VERSION = eval $VERSION;
 
 =head1 NAME
