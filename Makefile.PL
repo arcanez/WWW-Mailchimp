@@ -13,5 +13,12 @@ WriteMakefile(
     'URI' => '0',
     'URI::QueryParam' => '0',
   },
+  META_MERGE      => {
+    resources => {
+      license     =>      'http://dev.perl.org/licenses/',
+      bugtracker  =>      'http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Mailchimp',
+      repository  =>      'https://github.com/arcanez/www-mailchimp',
+    },
+  },
 );
 
