@@ -121,6 +121,14 @@ sub _build_lwp {
   my $ua = LWP::UserAgent->new( timeout => $self->timeout, agent => __PACKAGE__ . ' ' . $VERSION );
 }
 
+has 'json' => (
+    is => 'ro',
+    isa => 'JSON',
+    lazy_build => 1,
+);
+
+sub _build_json { JSON->new->allow_nonref }
+
 sub _build_query_args {
   my ($self, %args) = @_;
   my %merge_vars = @{delete $args{merge_vars} || []};
@@ -149,7 +157,7 @@ sub _request {
   my $uri = $self->_build_query_args(method => $method, %args);
 
   my $response = $self->request( HTTP::Request->new( GET => $uri->canonical ) );
-  return $response->is_success ? from_json($response->content) : $response->status_line;
+  return $response->is_success ? $self->json->decode($response->content) : $response->status_line;
 }
 
 my @api_methods = qw(
