@@ -70,7 +70,7 @@ has api_version => (
 );
 
 has datacenter => (
-  is => 'ro',
+  is => 'rw',
   isa => 'Str',
   lazy => 1,
   default => 'us1',
@@ -80,6 +80,11 @@ has apikey => (
   is => 'ro',
   isa => 'Str',
   required => 1,
+  trigger => sub {
+    my ($self, $val) = @_;
+    my ($datacenter) = ($val =~ /\-(\w+)$/);
+    $self->datacenter($datacenter)
+  },
 );
 
 has api_url => (
