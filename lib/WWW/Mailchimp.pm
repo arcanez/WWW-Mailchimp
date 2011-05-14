@@ -123,7 +123,7 @@ sub _build_lwp {
 
 sub _build_query_args {
   my ($self, %args) = @_;
-  my %merge_vars = @{delete $args{merge_vars}};
+  my %merge_vars = @{delete $args{merge_vars} || []};
   for my $var (keys %merge_vars) {
     if (ref($merge_vars{$var}) eq 'ARRAY') {
       my $count = 0; 
