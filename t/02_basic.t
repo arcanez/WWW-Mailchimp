@@ -2,7 +2,7 @@ use Test::More;
 
 BEGIN { use_ok('WWW::Mailchimp'); };
 
-my $apikey = $ENV{MAILCHIMP_APIKEY} || 'bogus';
+my $apikey = $ENV{MAILCHIMP_APIKEY} || 'bogus-us1';
 
 my $mailchimp = WWW::Mailchimp->new( apikey => $apikey );
 isa_ok($mailchimp, 'WWW::Mailchimp');
