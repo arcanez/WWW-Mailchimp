@@ -1,3 +1,9 @@
+0.003   13 May 2011
+    * base datacenter off api key (FAYLAND)
+    * fix "Can't use an undefined value as an ARRAY reference" (FAYLAND)
+    * use allow_nonref in JSON, http://apidocs.mailchimp.com/1.3/campaigncreate.func.php (FAYLAND)
+    * more POD cleanup
+
 0.002   20 Apr 2011
     * add some meta information (thanks, MDIETRICH)
     * fix up some POD
