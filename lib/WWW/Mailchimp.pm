@@ -5,7 +5,7 @@ use JSON;
 use URI;
 use URI::QueryParam;
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 $VERSION = eval $VERSION;
 
 =head1 NAME
@@ -34,13 +34,15 @@ WWW::Mailchimp - Perl wrapper around the Mailchimp v1.3 API
 WWW::Mailchimp is a simple Perl wrapper around the Mailchimp API v1.3.
   
 It is as simple as creating a new WWW::Mailchimp object and calling ->method
-Each key/value pair becomes part of a query string, for example:
+Each key/value pair becomes part of POST content, for example:
 
   $mailchimp->listSubscribe( id => 1, email_address => 'foo@bar.com' );
 
-results in the query string
+results in the query
 
-  ?method=listSubscribe&id=1&email_address=foo@bar.com
+  ?method=listSubscribe # GET URI
+  # POST CONTENT
+  id=1&email_address=foo@bar.com
   # apikey, output, etc are tacked on by default. This is also uri_escaped
 
 =head1 BUGS
@@ -114,7 +116,7 @@ has ua => (
   isa => 'LWP::UserAgent',
   lazy => 1,
   builder => '_build_lwp',
-  handles => [ qw(request) ],
+  handles => [ qw(post) ],
 );
 
 has timeout => (
@@ -152,9 +154,7 @@ sub _build_query_args {
     }
   }
   
-  my $uri = URI->new( $self->api_url );
-  $uri->query_form_hash( apikey => $self->apikey, output => $self->output_format, %args );
-  return $uri;
+  return %args;
 }
 
 sub _request {
@@ -162,9 +162,13 @@ sub _request {
   my $method = shift;
   my %args = ref($_[0]) ? %{$_[0]} : @_;
 
-  my $uri = $self->_build_query_args(method => $method, %args);
+  %args = $self->_build_query_args(apikey => $self->apikey, output => $self->output_format, %args);
+  
+  my $uri = URI->new( $self->api_url );
+  $uri->query_form_hash(method => $method); # method must be in GET
 
-  my $response = $self->request( HTTP::Request->new( GET => $uri->canonical ) );
+  # use POST to fix '414 Request-URI Too Large'
+  my $response = $self->post( $uri->canonical, \%args );
   return $response->is_success ? $self->json->decode($response->content) : $response->status_line;
 }
 
@@ -270,3 +274,4 @@ for my $method (@api_methods) {
 }
 
 1;
+
