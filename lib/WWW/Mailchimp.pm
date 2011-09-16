@@ -3,7 +3,7 @@ use Moose;
 use LWP;
 use JSON;
 use URI;
-use URI::QueryParam;
+use PHP::HTTPBuildQuery qw(http_build_query);
 
 our $VERSION = '0.003';
 $VERSION = eval $VERSION;
@@ -124,16 +124,16 @@ has timeout => (
   default => 5,
 );
 
-sub _build_lwp {
-  my $self = shift;
-  my $ua = LWP::UserAgent->new( timeout => $self->timeout, agent => __PACKAGE__ . ' ' . $VERSION );
-}
-
 has 'json' => (
     is => 'ro',
     isa => 'JSON',
     lazy_build => 1,
 );
+
+sub _build_lwp {
+  my $self = shift;
+  my $ua = LWP::UserAgent->new( timeout => $self->timeout, agent => __PACKAGE__ . ' ' . $VERSION );
+}
 
 sub _build_json { JSON->new->allow_nonref }
 
@@ -151,9 +151,11 @@ sub _build_query_args {
       $args{"merge_vars[$var]"} = $merge_vars{$var};
     }
   }
-  
+
   my $uri = URI->new( $self->api_url );
-  $uri->query_form_hash( apikey => $self->apikey, output => $self->output_format, %args );
+  $args{apikey} = $self->apikey;
+  $args{output} = $self->output_format;
+  $uri->query( http_build_query( \%args ) );
   return $uri;
 }
 
