@@ -5,7 +5,7 @@ use JSON;
 use URI;
 use PHP::HTTPBuildQuery qw(http_build_query);
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 $VERSION = eval $VERSION;
 
 =head1 NAME
