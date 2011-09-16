@@ -3,7 +3,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  plan skip_all => '$ENV{MAILCHIMP_APKIEY not set, skipping live tests' unless defined $ENV{MAILCHIMP_APIKEY}; 
+  plan skip_all => '$ENV{MAILCHIMP_APIKEY} not set, skipping live tests' unless defined $ENV{MAILCHIMP_APIKEY}; 
 
   plan tests => 6;
   use_ok('WWW::Mailchimp');
