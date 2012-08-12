@@ -132,7 +132,7 @@ has 'json' => (
 
 sub _build_lwp {
   my $self = shift;
-  my $ua = LWP::UserAgent->new( timeout => $self->timeout, agent => __PACKAGE__ . ' ' . $VERSION );
+  my $ua = LWP::UserAgent->new( timeout => $self->timeout, agent => __PACKAGE__ . ' ' . $VERSION, ssl_opts => { verify_hostname => 0 } );
 }
 
 sub _build_json { JSON->new->allow_nonref }
