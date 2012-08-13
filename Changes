@@ -1,3 +1,6 @@
+0.005   13 Aug 2012
+    * Don't check for certificate authenticity (HHUNTER)
+
 0.004   16 Sep 2011
     * fix up query string generation
     * add a live test for batch commands 
