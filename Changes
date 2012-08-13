@@ -1,3 +1,6 @@
+0.006   13 Aug 2012
+    * fix typo in synopsis (RT#75800)
+
 0.005   13 Aug 2012
     * Don't check for certificate authenticity (HHUNTER)
 
