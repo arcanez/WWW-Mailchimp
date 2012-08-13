@@ -22,8 +22,8 @@ WWW::Mailchimp - Perl wrapper around the Mailchimp v1.3 API
 
   my $campaigns = $mailchimp->campaigns;
   my $lists = $mailchimp->lists;
-  my $subscribers = $mailchimp->listMembers( $lists->[0]->{id} );
-  my $ok = $mailchimp->listSubscribe( id => $lists->[0]->{id}, 
+  my $subscribers = $mailchimp->listMembers( $lists->{data}->[0]->{id} );
+  my $ok = $mailchimp->listSubscribe( id => $lists->{data}->[0]->{id},
                                       email_address => 'foo@bar.com',
                                       update_existing => 1,
                                       merge_vars => [ FNAME => 'foo',
