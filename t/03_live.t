@@ -15,7 +15,7 @@ isa_ok($mailchimp, 'WWW::Mailchimp');
 isa_ok($mailchimp->ua, 'LWP::UserAgent');
 is($mailchimp->api_url, 'https://' . $mailchimp->datacenter . '.api.mailchimp.com/1.3/');
 
-my %info1 = qw(EMAIL foo@bar.com EMAIL_TYPE text);
+my %info1 = qw(EMAIL foo@foobar.com EMAIL_TYPE text);
 my %info2 = qw(EMAIL baz@quux.com EMAIL_TYPE text);
 my @batch = ( \%info1, \%info2 );
 
@@ -27,7 +27,7 @@ my $listBatchSubscribe = $mailchimp->listBatchSubscribe( id => $list_id, batch =
 is_deeply( $listBatchSubscribe, $listBatchSubscribe_expected, 'listBatchSubscribe succeeded' );
 
 my $listBatchUnsubscribe_expected = { success_count => 2, error_count => 0, errors => [] };
-my $listBatchUnsubscribe = $mailchimp->listBatchUnsubscribe( id => $list_id, emails => [ 'foo@bar.com', 'baz@quux.com' ], delete_member => 1, send_goodbye => 0, send_notify => 0 );
+my $listBatchUnsubscribe = $mailchimp->listBatchUnsubscribe( id => $list_id, emails => [ 'foo@foobar.com', 'baz@quux.com' ], delete_member => 1, send_goodbye => 0, send_notify => 0 );
 is_deeply( $listBatchUnsubscribe, $listBatchUnsubscribe_expected, 'listBatchUnsubscribe succeeded' );
 
 done_testing;
