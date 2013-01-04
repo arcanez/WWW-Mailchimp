@@ -155,6 +155,8 @@ sub _build_query_args {
   my $uri = URI->new( $self->api_url );
   $args{apikey} = $self->apikey;
   $args{output} = $self->output_format;
+  delete $args{$_} for qw(json ua);
+
   $uri->query( http_build_query( \%args ) );
   return $uri;
 }
