@@ -13,9 +13,10 @@ WriteMakefile(
   PREREQ_PM => {
     'JSON' => '0',
     'LWP' => '0',
-    'Moose' => '0.93',
+    'Moo' => '1.000007',
     'URI' => '0',
     'PHP::HTTPBuildQuery' => '0',
+    'Sub::Name' => '0.05',
   },
   'BUILD_REQUIRES' => {
     'Test::More' => '0.88',

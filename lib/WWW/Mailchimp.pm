@@ -1,9 +1,11 @@
 package WWW::Mailchimp;
-use Moose;
+use Moo;
 use LWP;
 use JSON;
 use URI;
 use PHP::HTTPBuildQuery qw(http_build_query);
+use MooX::Types::MooseLike::Base qw(Int InstanceOf Num Str);
+use Sub::Name;
 
 our $VERSION = '0.006';
 $VERSION = eval $VERSION;
@@ -72,21 +74,21 @@ the same terms as the Perl 5 programming language system itself.
 
 has api_version => (
   is => 'ro',
-  isa => 'Num',
+  isa => Num,
   lazy => 1,
-  default => 1.3,
+  default => sub { 1.3 },
 );
 
 has datacenter => (
   is => 'rw',
-  isa => 'Str',
+  isa => Str,
   lazy => 1,
-  default => 'us1',
+  default => sub { 'us1' },
 );
 
 has apikey => (
   is => 'ro',
-  isa => 'Str',
+  isa => Str,
   required => 1,
   trigger => sub {
     my ($self, $val) = @_;
@@ -97,42 +99,40 @@ has apikey => (
 
 has api_url => (
   is => 'rw',
-  isa => 'Str',
+  isa => Str,
   lazy => 1,
   default => sub { my $self = shift; return 'https://' . $self->datacenter . '.api.mailchimp.com/' . $self->api_version . '/'; },
 );
 
 has output_format => (
   is => 'rw',
-  isa => 'Str',
+  isa => Str,
   lazy => 1,
-  default => 'json',
+  default => sub { 'json' },
 );
 
 has ua => (
-  is => 'ro',
-  isa => 'LWP::UserAgent',
-  lazy => 1,
-  builder => '_build_lwp',
+  is => 'lazy',
+  isa => InstanceOf['LWP::UserAgent'],
   handles => [ qw(request) ],
 );
 
 has timeout => (
   is => 'rw',
-  isa => 'Int',
+  isa => Int,
   lazy => 1,
-  default => 5,
+  default => sub { 5 },
 );
 
-has 'json' => (
-    is => 'ro',
-    isa => 'JSON',
-    lazy_build => 1,
+has json => (
+  is => 'ro',
+  isa => InstanceOf['JSON'],
+  is => 'lazy',
 );
 
-sub _build_lwp {
+sub _build_ua {
   my $self = shift;
-  my $ua = LWP::UserAgent->new( timeout => $self->timeout, agent => __PACKAGE__ . ' ' . $VERSION, ssl_opts => { verify_hostname => 0 } );
+  my $ua = LWP::UserAgent->new( timeout => $self->timeout, agent => __PACKAGE__ . ' ' . $VERSION, ssl_opts => { verify_hostname => 0, SSL_verify_mode => 0x00 } );
 }
 
 sub _build_json { JSON->new->allow_nonref }
@@ -267,8 +267,11 @@ my @api_methods = qw(
   templates
 );
 
-for my $method (@api_methods) {
-  __PACKAGE__->meta->add_method( $method => sub { shift->_request($method, @_) } );
+sub BUILD {
+  no strict 'refs';
+  for my $method (@api_methods) {
+    *{$method} = subname $method => sub { shift->_request($method, @_) };
+  }
 }
 
 1;
