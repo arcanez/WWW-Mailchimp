@@ -17,6 +17,7 @@ WriteMakefile(
     'URI' => '0',
     'PHP::HTTPBuildQuery' => '0',
     'Sub::Name' => '0.05',
+    'MooX::Types::MooseLike' => '0.16',
   },
   'BUILD_REQUIRES' => {
     'Test::More' => '0.88',

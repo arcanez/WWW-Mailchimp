@@ -1,3 +1,6 @@
+0.006_04 7 Jan 2013
+    * dep on MooX::Types::MooseLike
+
 0.006_03 4 Jan 2013
     * unbreak the dist
 
