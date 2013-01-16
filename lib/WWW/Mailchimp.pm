@@ -7,7 +7,7 @@ use PHP::HTTPBuildQuery qw(http_build_query);
 use MooX::Types::MooseLike::Base qw(Int InstanceOf Num Str);
 use Sub::Name;
 
-our $VERSION = '0.006_04';
+our $VERSION = '0.007';
 $VERSION = eval $VERSION;
 
 =head1 NAME
