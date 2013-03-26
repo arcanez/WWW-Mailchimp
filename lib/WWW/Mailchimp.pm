@@ -269,11 +269,9 @@ my @api_methods = qw(
   templates
 );
 
-sub BUILD {
-  no strict 'refs';
-  for my $method (@api_methods) {
-    *{$method} = subname $method => sub { shift->_request($method, @_) };
-  }
+no strict 'refs';
+for my $method (@api_methods) {
+  *{$method} = subname $method => sub { shift->_request($method, @_) };
 }
 
 1;
