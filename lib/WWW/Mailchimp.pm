@@ -6,7 +6,6 @@ use URI;
 use PHP::HTTPBuildQuery qw(http_build_query);
 use MooX::Types::MooseLike::Base qw(Int InstanceOf Num Str);
 use Sub::Name;
-use Data::Dump qw( dump );
 
 our $VERSION = '0.007_01';
 $VERSION = eval $VERSION;
