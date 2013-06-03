@@ -6,6 +6,7 @@ use URI;
 use PHP::HTTPBuildQuery qw(http_build_query);
 use MooX::Types::MooseLike::Base qw(Int InstanceOf Num Str);
 use Sub::Name;
+use Data::Dump qw( dump );
 
 our $VERSION = '0.007_01';
 $VERSION = eval $VERSION;
@@ -34,7 +35,7 @@ WWW::Mailchimp - Perl wrapper around the Mailchimp v1.3 API
 =head1 DESCRIPTION
 
 WWW::Mailchimp is a simple Perl wrapper around the Mailchimp API v1.3.
-  
+
 It is as simple as creating a new WWW::Mailchimp object and calling ->method
 Each key/value pair becomes part of a query string, for example:
 
@@ -142,7 +143,7 @@ sub _build_query_args {
   my %merge_vars = @{delete $args{merge_vars} || []};
   for my $var (keys %merge_vars) {
     if (ref($merge_vars{$var}) eq 'ARRAY') {
-      my $count = 0; 
+      my $count = 0;
       for my $val (@{$merge_vars{$var}}) {
         $args{"merge_vars[$var][$count]"} = $val;
         $count++;
@@ -157,8 +158,7 @@ sub _build_query_args {
   $args{output} = $self->output_format;
   delete $args{$_} for qw(json ua);
 
-  $uri->query( http_build_query( \%args ) );
-  return $uri;
+  return \%args;
 }
 
 sub _request {
@@ -166,9 +166,16 @@ sub _request {
   my $method = shift;
   my %args = ref($_[0]) ? %{$_[0]} : @_;
 
-  my $uri = $self->_build_query_args(method => $method, %args);
+  # uri must include the method (even for a POST request)
+  my $uri = URI->new( $self->api_url );
+  $uri->query( http_build_query( { method => $method } ) );
 
-  my $response = $self->request( HTTP::Request->new( GET => $uri->canonical ) );
+  # build a POST request with json-encoded arguments
+  my $post_args = $self->_build_query_args(%args);
+  my $req = HTTP::Request->new('POST', $uri);
+  $req->content( $self->json->encode($post_args) );
+
+  my $response = $self->request( $req );
   return $response->is_success ? $self->json->decode($response->content) : $response->status_line;
 }
 
