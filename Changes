@@ -1,3 +1,6 @@
+0.007_03 6 Jun 2013
+    * uri encode json params
+
 0.007_02 6 Jun 2013
     * dev release for Request-URI Too Large
 
