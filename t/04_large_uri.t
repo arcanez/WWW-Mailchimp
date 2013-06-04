@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Exception;
+use Test::Fatal qw(lives_ok);
 
 BEGIN {
   plan skip_all => '$ENV{MAILCHIMP_APIKEY} not set, skipping live tests' unless defined $ENV{MAILCHIMP_APIKEY};
