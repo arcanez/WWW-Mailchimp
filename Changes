@@ -1,7 +1,10 @@
-0.007_03 6 Jun 2013
+0.008 6 Jun 2013
+    * non-dev release
+
+0.007_03 4 Jun 2013
     * uri encode json params
 
-0.007_02 6 Jun 2013
+0.007_02 4 Jun 2013
     * dev release for Request-URI Too Large
 
 0.007_01 26 Mar 2013
