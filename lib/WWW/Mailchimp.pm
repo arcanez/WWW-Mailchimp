@@ -173,7 +173,7 @@ sub _request {
   # build a POST request with json-encoded arguments
   my $post_args = $self->_build_query_args(%args);
   my $req = HTTP::Request->new('POST', $uri);
-  $req->content( uri_escape( $self->json->encode($post_args) ) );
+  $req->content( uri_escape_utf8( $self->json->encode($post_args) ) );
 
   my $response = $self->request( $req );
   return $response->is_success ? $self->json->decode($response->content) : $response->status_line;
