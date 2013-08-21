@@ -4,7 +4,7 @@ use 5.008001;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-  NAME => 'WWW-Mailchimp',
+  NAME => 'WWW::Mailchimp',
   AUTHOR  => 'Justin Hunter <justin.d.hunter@gmail.com>',
   VERSION_FROM => 'lib/WWW/Mailchimp.pm',
   LICENSE => 'perl',
